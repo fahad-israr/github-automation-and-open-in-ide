@@ -7,4 +7,4 @@
 - Opens up **VsCode as IDE**, for the rest  **an editable configuration file** will be added soon.
 - Only **Linux Supported Currently (Other OS in Dev)**
 - **Terminal Testing using** `xdg-open ide://https://github.com/user-name/repo.git`
-- **Native Binary** genrated using `native-image -H:EnableURLProtocols=http --no-server starfish`
+- **Native Binary** genrated using `native-image -H:EnableURLProtocols=ide --no-server starfish`
