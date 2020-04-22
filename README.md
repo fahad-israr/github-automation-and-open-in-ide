@@ -1,5 +1,5 @@
 ## Automation Tool to Open repository in IDE directly from Web Page
-![Working Screenshot](https://user-images.githubusercontent.com/31308705/79615929-66fd4680-8121-11ea-9750-86a683cf5f41.gif)
+![Working Screenshot](https://user-images.githubusercontent.com/31308705/79685056-61078280-8253-11ea-8ac1-aab1531ca0ab.gif)
 - To **install** simply clone and execute **`./install`**
 - Use our  **Browser Extension** To Enable Browser Functionality(availabele in Chrome Extension Directory)[Load Unpacked]
 - To understand **git automation and IDE launcher** view the **source file**([starfish.java](https://github.com/fahad-israr/github-automation-and-open-in-ide/blob/master/starfish.java))
