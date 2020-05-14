@@ -18,9 +18,11 @@ jobs:
     - name: Install native-image
       run: gu install native-image
     - name: Set version
-      run: ./starfish/mvnw versions:set -DnewVersion="${{ github.event.release.tag_name }}" 
+      working-directory: ./starfish
+      run: mvnw versions:set -DnewVersion="${{ github.event.release.tag_name }}" 
     - name: Build native executable
-      run: ./starfish/mvnw package -Dnative 
+      working-directory: ./starfish
+      run: mvnw package -Dnative 
     - name: Upload native executable
       id: upload-native-executable
       uses: actions/upload-release-asset@v1
@@ -28,6 +30,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ github.event.release.upload_url }}
-        asset_path: ./starfish/target/quarkus-ls-${{ github.event.release.tag_name }}-runner 
-        asset_name: quarkus-ls-${{ github.event.release.tag_name }}-linux
+        asset_path: ./starfish/target/starfish-${{ github.event.release.tag_name }}-runner 
+        asset_name: starfish-${{ github.event.release.tag_name }}-linux
         asset_content_type: application/octet-stream
