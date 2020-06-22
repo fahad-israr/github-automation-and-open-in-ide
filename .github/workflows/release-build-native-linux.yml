@@ -67,7 +67,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: starfish-linux-${{github.sha}}.zip
-          path: ./target/starfish-${{github.sha}}.zip
+          path: ./cli/target/starfish-${{github.sha}}.zip
           
 
 
