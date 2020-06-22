@@ -9,6 +9,11 @@ on:
   pull_request:
     branches:
       - master
+
+defaults:
+  run:
+    working-directory: cli
+
 jobs:
 # Trigger this job only on release
   build-on-release:
@@ -17,8 +22,6 @@ jobs:
     runs-on: windows-2019
     steps:
     - uses: actions/checkout@v2
-    - name: Change work directory
-    - run: cd cli
     - name: Install graalvm
       uses: DeLaGuardo/setup-graalvm@3
       with:
@@ -58,8 +61,6 @@ jobs:
     runs-on: windows-2019
     steps:
       - uses: actions/checkout@v2
-      - name: Change work directory
-      - run: cd cli
       - name: Install graalvm
         uses: DeLaGuardo/setup-graalvm@3
         with:
