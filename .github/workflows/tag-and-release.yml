@@ -1,0 +1,56 @@
+# This creates release on pushing with tag
+
+name: tag-and-release
+
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+defaults:
+  run:
+    working-directory: cli
+
+jobs:
+ 
+  build:
+
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        body: |
+          Changes in this Release
+          - First Change
+          - Second Change
+        draft: true
+
+    - name: Install graalvm
+      uses: DeLaGuardo/setup-graalvm@3
+      with:
+        graalvm-version: '20.0.0.java11'
+    - name: Install native-image
+      run: gu install native-image
+    - name: Set version
+      run: ./mvnw versions:set -DnewVersion="${{ github.event.release.tag_name }}" 
+    - name: Build native executable
+      run: ./mvnw package -Dnative 
+    - name: Upload native executable
+      id: upload-native-executable
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: ./cli/target/starfish-${{ github.event.release.tag_name }}.zip 
+        asset_name: starfish-linux.zip
+        asset_content_type: application/octet-stream
+    
