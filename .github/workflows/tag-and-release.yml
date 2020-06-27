@@ -16,21 +16,24 @@ jobs:
  
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+        matrix:
+            os: [ubuntu-latest, windows-2019, macos-latest ]
     steps:
     - uses: actions/checkout@v2
+    - name: Get the version
+      id: get_version
+      run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+      shell: bash
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
       with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
-        body: |
-          Changes in this Release
-          - First Change
-          - Second Change
+        tag_name: ${{ steps.get_version.outputs.VERSION }}
+        release_name: Release ${{steps.get_version.outputs.VERSION}}
         draft: true
 
     - name: Install graalvm
@@ -40,17 +43,42 @@ jobs:
     - name: Install native-image
       run: gu install native-image
     - name: Set version
-      run: ./mvnw versions:set -DnewVersion="${{ github.event.release.tag_name }}" 
+      run: ./mvnw versions:set -DnewVersion="${{steps.get_version.outputs.VERSION}}" 
     - name: Build native executable
       run: ./mvnw package -Dnative 
-    - name: Upload native executable
-      id: upload-native-executable
+    
+    - if: matrix.os == 'ubuntu-latest' 
+      name: Upload native executable Linux
+      id: upload-native-executable-linux
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: ${{ github.event.release.upload_url }}
-        asset_path: ./cli/target/starfish-${{ github.event.release.tag_name }}.zip 
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./cli/target/starfish-${{steps.get_version.outputs.VERSION}}.zip 
         asset_name: starfish-linux.zip
         asset_content_type: application/octet-stream
-    
+
+    - if: matrix.os == 'windows-2019' 
+      name: Upload native executable Windows
+      id: upload-native-executable-windows
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./cli/target/starfish-${{steps.get_version.outputs.VERSION}}.zip 
+        asset_name: starfish-win64.zip
+        asset_content_type: application/octet-stream
+
+    - if: matrix.os == 'macos-latest' 
+      name: Upload native executable macos
+      id: upload-native-executable-macos
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./cli/target/starfish-${{steps.get_version.outputs.VERSION}}.zip 
+        asset_name: starfish-macos.zip
+        asset_content_type: application/octet-stream
