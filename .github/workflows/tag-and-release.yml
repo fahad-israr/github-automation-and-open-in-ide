@@ -40,7 +40,7 @@ jobs:
     - name: Install native-image
       run: gu install native-image
     - name: Set version
-      run: ./mvnw versions:set -DnewVersion="${{ github.event.release.tag_name }}" 
+      run: ./mvnw versions:set -DnewVersion="${{ steps.create_release.outputs.tag_name }}" 
     - name: Build native executable
       run: ./mvnw package -Dnative 
     - name: Upload native executable
@@ -49,8 +49,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: ${{ github.event.release.upload_url }}
-        asset_path: ./cli/target/starfish-${{ github.event.release.tag_name }}.zip 
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./cli/target/starfish-${{ steps.create_release.outputs.tag_name }}.zip 
         asset_name: starfish-linux.zip
         asset_content_type: application/octet-stream
     
