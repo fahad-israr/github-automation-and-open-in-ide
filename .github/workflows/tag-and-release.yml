@@ -15,7 +15,7 @@ defaults:
 jobs:
   createrelease:
     name: createrelease
-    runs-on: [macOS-latest]
+    runs-on: [ubuntu-latest]
     steps:
       - name: Check out code
         uses: actions/checkout@v1
@@ -34,7 +34,9 @@ jobs:
           prerelease: false
           draft: true
       - name: Output Release URL File
-        run: echo "${{ steps.create_release.outputs.upload_url }}" > release_url.txt
+        shell: bash 
+        run: |
+           expr "${{ steps.create_release.outputs.upload_url }}" > release_url.txt
       - name: Save Release URL File for publish
         uses: actions/upload-artifact@v1
         with:
