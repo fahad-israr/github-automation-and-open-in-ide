@@ -101,10 +101,10 @@ jobs:
       with:
         name: release_url
     - name: Get Release File Name & Upload URL
-        id: get_release_info
-        run: |
-          value=`cat release_url/release_url.txt`
-          echo ::set-output name=upload_url::$value
+      id: get_release_info
+      run: |
+        value=`cat release_url/release_url.txt`
+        echo ::set-output name=upload_url::$value
     
     - if: matrix.os == 'ubuntu-latest' 
       name: Upload native executable Linux
