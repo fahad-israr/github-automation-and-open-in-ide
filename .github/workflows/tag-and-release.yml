@@ -39,7 +39,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: release_url
-          path: release_url.txt
+          path: /github/workspace/release_url.txt
    
  
   build:
