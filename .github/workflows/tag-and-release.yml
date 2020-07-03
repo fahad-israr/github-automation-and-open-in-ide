@@ -36,7 +36,7 @@ jobs:
       - run: 'mkdir --parents results/artifacts'
 
       - name: Output Release URL File
-        run: echo "${{ steps.create_release.outputs.upload_url }}" > results/artifacts/release_url.txt
+        run: 'env | grep GITHUB_ | echo "${{ steps.create_release.outputs.upload_url }}" > results/artifacts/release_url.txt'
       - name: Save Release URL File for publish
         uses: actions/upload-artifact@v2
         with:
