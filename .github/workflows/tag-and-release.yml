@@ -40,7 +40,7 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: release_url
-          path: ./release_url.txt
+          path: ../release_url.txt
    
  
   build:
