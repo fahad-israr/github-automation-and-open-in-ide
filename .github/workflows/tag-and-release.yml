@@ -41,7 +41,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: release_url
-          path: results/artifacts/release_url.txt
+          path: results/artifacts/
    
  
   build:
