@@ -33,13 +33,15 @@ jobs:
           release_name: Release ${{ steps.get_version.outputs.VERSION  }}
           prerelease: false
           draft: true
+      - run: 'mkdir --parents results/artifacts'
+
       - name: Output Release URL File
-        run: echo "${{ steps.create_release.outputs.upload_url }}" > release_url.txt
+        run: echo "${{ steps.create_release.outputs.upload_url }}" > results/artifacts/release_url.txt
       - name: Save Release URL File for publish
         uses: actions/upload-artifact@v2
         with:
           name: release_url
-          path: /github/workspace/release_url.txt
+          path: results/artifacts/release_url.txt
    
  
   build:
