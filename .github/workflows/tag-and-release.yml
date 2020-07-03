@@ -16,6 +16,8 @@ jobs:
   createrelease:
     name: createrelease
     runs-on: [ubuntu-latest]
+    outputs:
+      release_url: ${{ steps.create_release.outputs.upload_url }}
     steps:
       - uses: actions/checkout@v2
       - name: Get the version
@@ -32,15 +34,6 @@ jobs:
           release_name: Release ${{ steps.get_version.outputs.VERSION  }}
           prerelease: false
           draft: true
-      - name: Output Release URL File
-        shell: bash
-        run: |
-          echo "${{ steps.create_release.outputs.upload_url }}" > release_url.txt
-      - name: Save Release URL File for publish
-        uses: actions/upload-artifact@v2
-        with:
-          name: release_url
-          path: release_url.txt
    
  
   build:
@@ -97,15 +90,6 @@ jobs:
         mvnw package -Dnative"
       shell: cmd
       
-    - name: Load Release URL File from release job
-      uses: actions/download-artifact@v1
-      with:
-        name: release_url
-    - name: Get Release File Name & Upload URL
-      id: get_release_info
-      run: |
-        value=`cat release_url/release_url.txt`
-        echo ::set-output name=upload_url::$value
     
     - if: matrix.os == 'ubuntu-latest' 
       name: Upload native executable Linux
@@ -114,7 +98,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: ${{ steps.get_release_info.outputs.upload_url }}
+        upload_url: ${{ needs.createrelease.outputs.release_url }}
         asset_path: ./cli/target/starfish-${{steps.get_version.outputs.VERSION}}.zip 
         asset_name: starfish-linux.zip
         asset_content_type: application/octet-stream
@@ -126,7 +110,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: ${{ steps.get_release_info.outputs.upload_url }}
+        upload_url: ${{ needs.createrelease.outputs.release_url }}
         asset_path: ./cli/target/starfish-${{steps.get_version.outputs.VERSION}}.zip 
         asset_name: starfish-win64.zip
         asset_content_type: application/octet-stream
@@ -138,7 +122,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: ${{ steps.get_release_info.outputs.upload_url }}
+        upload_url: ${{ needs.createrelease.outputs.release_url}}
         asset_path: ./cli/target/starfish-${{steps.get_version.outputs.VERSION}}.zip 
         asset_name: starfish-macos.zip
         asset_content_type: application/octet-stream
