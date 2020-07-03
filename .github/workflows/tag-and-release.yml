@@ -18,6 +18,7 @@ jobs:
     runs-on: [ubuntu-latest]
     outputs:
       release_url: ${{ steps.create_release.outputs.upload_url }}
+      version: ${{ steps.get_version.outputs.VERSION }}
     steps:
       - uses: actions/checkout@v2
       - name: Get the version
@@ -46,11 +47,6 @@ jobs:
     
     steps:
     - uses: actions/checkout@v2
-    - name: Get the version
-      id: get_version
-      run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
-      shell: bash
-
     - name: Install graalvm
       uses: DeLaGuardo/setup-graalvm@3
       with:
@@ -62,7 +58,7 @@ jobs:
       run: gu install native-image
     - if: matrix.os != 'windows-2019' 
       name: Set version
-      run: ./mvnw versions:set -DnewVersion="${{steps.get_version.outputs.VERSION}}" 
+      run: ./mvnw versions:set -DnewVersion="${{needs.createrelease.outputs.version}}" 
     - if: matrix.os != 'windows-2019' 
       name: Build native executable
       run: ./mvnw package -Dnative 
@@ -80,7 +76,7 @@ jobs:
       uses: al-cheb/configure-pagefile-action@v1.2
     - if: matrix.os == 'windows-2019'
       name: Set version
-      run: mvnw versions:set -DnewVersion="${{ steps.get_version.outputs.VERSION }}"
+      run: mvnw versions:set -DnewVersion="${{ needs.createrelease.outputs.version }}"
       shell: cmd
     - if: matrix.os == 'windows-2019'
       name: Build native executable
@@ -99,7 +95,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ needs.createrelease.outputs.release_url }}
-        asset_path: ./cli/target/starfish-${{steps.get_version.outputs.VERSION}}.zip 
+        asset_path: ./cli/target/starfish-${{needs.createrelease.outputs.version}}.zip 
         asset_name: starfish-linux.zip
         asset_content_type: application/octet-stream
 
@@ -111,7 +107,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ needs.createrelease.outputs.release_url }}
-        asset_path: ./cli/target/starfish-${{steps.get_version.outputs.VERSION}}.zip 
+        asset_path: ./cli/target/starfish-${{needs.createrelease.outputs.version}}.zip 
         asset_name: starfish-win64.zip
         asset_content_type: application/octet-stream
 
@@ -123,6 +119,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ needs.createrelease.outputs.release_url}}
-        asset_path: ./cli/target/starfish-${{steps.get_version.outputs.VERSION}}.zip 
+        asset_path: ./cli/target/starfish-${{needs.createrelease.outputs.version}}.zip 
         asset_name: starfish-macos.zip
         asset_content_type: application/octet-stream
