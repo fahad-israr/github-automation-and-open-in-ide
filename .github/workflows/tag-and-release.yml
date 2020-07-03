@@ -15,7 +15,7 @@ defaults:
 jobs:
   createrelease:
     name: createrelease
-    runs-on: ubuntu-latest
+    runs-on: [ubuntu-latest]
     steps:
       - name: Check out code
         uses: actions/checkout@v1
@@ -34,16 +34,12 @@ jobs:
           prerelease: false
           draft: true
       - name: Output Release URL File
-        shell: bash 
-        run: |
-           expr "${{ steps.create_release.outputs.upload_url }}" > release_url.txt
-      - name: See Directory Files
-        run: ls
+        run: echo "${{ steps.create_release.outputs.upload_url }}" > release_url.txt
       - name: Save Release URL File for publish
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v2
         with:
           name: release_url
-          path: ./release_url.txt
+          path: release_url.txt
    
  
   build:
