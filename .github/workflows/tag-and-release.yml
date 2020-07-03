@@ -15,7 +15,7 @@ defaults:
 jobs:
   createrelease:
     name: createrelease
-    runs-on: [ubuntu-latest]
+    runs-on: [macOS-latest]
     steps:
       - name: Check out code
         uses: actions/checkout@v1
@@ -39,7 +39,7 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: release_url
-          path: release_url.txt
+          path: ./release_url.txt
    
  
   build:
