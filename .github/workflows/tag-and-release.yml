@@ -18,7 +18,7 @@ jobs:
     runs-on: [ubuntu-latest]
     steps:
       - name: Check out code
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
       - name: Get the version
         id: get_version
         run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
@@ -38,7 +38,7 @@ jobs:
         run: |
           echo "${{ steps.create_release.outputs.upload_url }}" > release_url.txt
       - name: Save Release URL File for publish
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v2
         with:
           name: release_url
           path: release_url.txt
