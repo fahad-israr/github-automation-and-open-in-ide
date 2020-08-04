@@ -39,8 +39,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ github.event.release.upload_url }}
-        asset_path: ./cli/target/starfish-${{ github.event.release.tag_name }}.zip
-        asset_name: starfish-linux.zip
+        asset_path: ./cli/target/starfix-${{ github.event.release.tag_name }}.zip
+        asset_name: starfix-linux.zip
         asset_content_type: application/octet-stream
 
 # Trigger this job only on Push or Pull-Request
@@ -60,14 +60,12 @@ jobs:
         run: ./mvnw versions:set -DnewVersion="${{github.sha}}" 
       - name: Build native executable
         run: ./mvnw package -Dnative 
-      - name: List Sub Items
-        run: ls -R
       - name: Upload native executable
         id: upload-native-executable
         uses: actions/upload-artifact@v2
         with:
-          name: starfish-linux-${{github.sha}}.zip
-          path: ./cli/target/starfish-${{github.sha}}.zip
+          name: starfix-linux-${{github.sha}}.zip
+          path: ./cli/target/starfix-${{github.sha}}.zip
           
 
 
