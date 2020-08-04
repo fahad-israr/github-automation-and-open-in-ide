@@ -8,10 +8,10 @@ import java.io.IOException;
 
 
 
-import static dk.xam.starfix.Starfix.validate_url;
-import static dk.xam.starfix.Starfix.launch_editor;
-import static dk.xam.starfix.Starfix.isWindows;
-import static dk.xam.starfix.Starfix.runCommand;
+import static dev.starfix.starfix.Starfix.validate_url;
+import static dev.starfix.starfix.Starfix.launch_editor;
+import static dev.starfix.starfix.Starfix.isWindows;
+import static dev.starfix.starfix.Starfix.runCommand;
 
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
